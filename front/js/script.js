@@ -18,19 +18,11 @@ function createProductCard(product) {
     productName.className = "productName";
 
     
-     
-    
     const productDescription = document.createElement('p');
     productDescription.innerHTML = product.description;
     productDescription.className = "productDescription";
     
 
-    
-
-    
-
-   
-    
     const productArticle = document.createElement('article');
     productArticle.append(productImg, productName, productDescription);
     
@@ -40,10 +32,6 @@ function createProductCard(product) {
     
     return a;
      
-   
-   
-
-    f
 }
 
 function displayProducts(products){

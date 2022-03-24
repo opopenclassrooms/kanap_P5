@@ -1,9 +1,9 @@
 
 function getProducts(){
-    return fetch("http://localhost:3000/api/products")
+    return fetch("http://localhost:3000/ape/products")
     .then((res) => res.json())
     .catch((error) => {
-        // Erreur 
+        window.alert("Une erreur");
     })
 }
 

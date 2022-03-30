@@ -1,17 +1,20 @@
 
 function getProducts(){
-    return fetch("http://localhost:3000/ape/products")
+    return fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .catch((error) => {
         window.alert("Une erreur");
+        
     })
+   
 }
+   //-----creation de carte produit----//
 
-function createProductCard(product) {
+   function createProductCard(product) {
 
     const productImg = document.createElement('img');
     productImg.src = product.imageUrl;
-    productImg.alt = product.altTxt
+    productImg.alt = product.altTxt;
        
     const productName = document.createElement('h3');
     productName.innerHTML = product.name;
@@ -33,6 +36,7 @@ function createProductCard(product) {
     return a;
      
 }
+//------- affichage de la carte produit----//
 
 function displayProducts(products){
     const itemsSection = document.querySelector('#items');

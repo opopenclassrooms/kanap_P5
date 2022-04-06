@@ -6,9 +6,10 @@ function getProduct(id){
         // Erreur 
     })
 }
-
-//getProduct('107fb5b75607497b96722bda5b504926').then((prod) => console.log(prod));
-
+/**
+ * description: Fonction qui affiche les info du produit dans la page produit
+ * @param product
+ */
 function displayProduct(product) {
     const imgElement = document.querySelector('.item__img img');
     imgElement.src = product.imageUrl;
@@ -22,7 +23,6 @@ function displayProduct(product) {
 
     const descriptionElement = document.querySelector('.item__content__description p');
     descriptionElement.innerHTML = product.description;
-
     checkColors(product)
 }
 /**
@@ -39,9 +39,7 @@ function checkColors(product)
     option.value = i
     element.appendChild(option)
   }
-
 }
-
 /**
  * description: Enregistre dans le loccal storage les item selectioner
  * @param product
@@ -50,7 +48,6 @@ let save = function () {
   console.log('Cliquer !')
   recupererInput()
 }
-
 function recupererInput()
 {
   const productId = new URL(document.location.href).searchParams.get("id")
@@ -62,46 +59,12 @@ function recupererInput()
     color: colorsSelected.value
   }
   localStorage.setItem('products', JSON.stringify(itemSelect))
-  //localStorage.setItem("product", JSON.stringify(productEnresgistreDansLocalStorage));
 }
+  let btn = document.getElementById('addToCart')
 
-let btn = document.getElementById('addToCart')
-
-btn.addEventListener('click', save)
-     //-----value optionn-----// 
-
-     /*var s = document.getElementById('colors');
-        // recuperer le produit
-        var options = [ 'blue', 'white', 'black' ];
-        
-        options.forEach(function(element, key) {
-          if (element == 'blue') {
-            s[s.options.length] = new Option(element, s.options.length, false, false);
-          }
-          if (element == 'white') {
-            s[s.options.length] = new Option(element, s.options.length, true, false); // Ajouter l'attribut "selected"
-          }
-          if (element == 'black') {
-            s[s.options.length] = new Option(element, s.options.length, false, true); // Sélectionnera l'option
-          }
-          console.log (colors)
-
-        }
-        );*/
-
-        //--------nombre d articles---------
-
-
-        //--------metre le choix du client dans une variable-----
-
-
-
-        //--------recupérer le choix du client----------
-
-        
-
-   
-     //-----local storage------//
+  btn.addEventListener('click', save)
+    
+//-----local storage------//
      let arrayProductId = [];
 
      //-------stocket la recupération du choix du client dans le local storage---
@@ -109,17 +72,15 @@ btn.addEventListener('click', save)
      //------declaration de la variable "productEnregistreDansLocalStorage" dans laquelle on met les key et les value qui sont dans le local storage---
      
           let productEnresgistreDansLocalStorage = JSON.parse(localStorage.getItem("product"));
-     //----JSON.parse pour convertire les données au format JSON qui sont dans le local storage en objet JavaScript
-          console.log(productEnresgistreDansLocalStorage)
-    
-//-----article deja enregistré dans le local storage----
-           if(productEnresgistreDansLocalStorage){
+//article deja enregistré dans le local storage
+           
+            if(productEnresgistreDansLocalStorage){
             productEnresgistreDansLocalStorage.push();
             localStorage.setItem("product", JSON.stringify(productEnresgistreDansLocalStorage));
             console.log(productEnresgistreDansLocalStorage)
            }            
 
-//------pas d article enregistré dans le local storage----
+//pas d article enregistré dans le local storage
 
            else{
             productEnresgistreDansLocalStorage = [];
@@ -128,14 +89,13 @@ btn.addEventListener('click', save)
             console.log(productEnresgistreDansLocalStorage)
            }
 
-
-         
-    
+/**
+ * Description: Cette fonction initialise la page
+ */
 async function initialize(){
     const productId = new URL(document.location.href).searchParams.get("id")
     const product = await getProduct(productId)
     displayProduct(product);
     console.log (product)
 }
-
 initialize();

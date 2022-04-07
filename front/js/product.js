@@ -57,7 +57,16 @@ function recupererInput()
     quantity: quantitySelected.value,
     color: colorsSelected.value
   }
-  localStorage.setItem('products', JSON.stringify(itemSelect))
+  //let localSave = localStorage.getItem('products');
+  let localSave = JSON.parse(localStorage.getItem('products'));
+  if (localSave) {
+	  localSave.push(itemSelect);
+	  localStorage.setItem('products', JSON.stringify(localSave))
+  } else {
+	let arraySelection = [itemSelect]
+	localStorage.setItem('products', JSON.stringify(arraySelection))
+  }
+  //localStorage.setItem('products', JSON.stringify(itemSelect));
 }
   let btn = document.getElementById('addToCart')
 

@@ -42,7 +42,6 @@ function checkColors(product)
 }
 /**
  * description: Enregistre dans le loccal storage les item selectioner
- * @param product
  */
 let save = function () {
   console.log('Cliquer !')
@@ -64,14 +63,11 @@ function recupererInput()
 
   btn.addEventListener('click', save)
     
-//-----local storage------//
-     let arrayProductId = [];
-
-     //-------stocket la recupération du choix du client dans le local storage---
-
-     //------declaration de la variable "productEnregistreDansLocalStorage" dans laquelle on met les key et les value qui sont dans le local storage---
+//local storage
      
-          let productEnresgistreDansLocalStorage = JSON.parse(localStorage.getItem("product"));
+     let arrayProductId = [];
+     let productEnresgistreDansLocalStorage = JSON.parse(localStorage.getItem("product"));
+
 //article deja enregistré dans le local storage
            
             if(productEnresgistreDansLocalStorage){

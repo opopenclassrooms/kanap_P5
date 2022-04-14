@@ -47,52 +47,21 @@ let save = function () {
   console.log('Cliquer !')
   recupererInput()
 }
-function recupererInput()
-{
-  const productId = new URL(document.location.href).searchParams.get("id")
-  let colorsSelected = document.getElementById('colors')
-  let quantitySelected = document.getElementById('quantity')
-  let itemSelect = {
-    id: productId,
-    quantity: quantitySelected.value,
-    color: colorsSelected.value
-  }
-  //let localSave = localStorage.getItem('products');
-  let localSave = JSON.parse(localStorage.getItem('products'));
-  if (localSave) {
-	  localSave.push(itemSelect);
-	  localStorage.setItem('products', JSON.stringify(localSave))
+
+function addToCart(productId, color, qty) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  const existing = cart.find(item => item.productId === productId && item.color === color); 
+
+  if (existing) {
+    existing.qty += qty;
   } else {
-	let arraySelection = [itemSelect]
-	localStorage.setItem('products', JSON.stringify(arraySelection))
+    cart.push({ productId: productId, color: color, qty: qty });
   }
-  //localStorage.setItem('products', JSON.stringify(itemSelect));
+
+  localStorage.setItem('cart', JSON.stringify(cart)); 
 }
-  let btn = document.getElementById('addToCart')
-
-  btn.addEventListener('click', save)
-    
-//local storage
-     
-     let arrayProductId = [];
-     let productEnresgistreDansLocalStorage = JSON.parse(localStorage.getItem("product"));
-
-//article deja enregistré dans le local storage
-           
-            if(productEnresgistreDansLocalStorage){
-            productEnresgistreDansLocalStorage.push();
-            localStorage.setItem("product", JSON.stringify(productEnresgistreDansLocalStorage));
-            console.log(productEnresgistreDansLocalStorage)
-           }            
-
-//pas d article enregistré dans le local storage
-
-           else{
-            productEnresgistreDansLocalStorage = [];
-            productEnresgistreDansLocalStorage.push();
-            localStorage.setItem("product" , JSON.stringify(productEnresgistreDansLocalStorage));
-            console.log(productEnresgistreDansLocalStorage)
-           }
+  
 
 /**
  * Description: Cette fonction initialise la page
@@ -101,6 +70,11 @@ async function initialize(){
     const productId = new URL(document.location.href).searchParams.get("id")
     const product = await getProduct(productId)
     displayProduct(product);
+    document.querySelector('button#addToCart').addEventListener('click', function(event) {
+      const color = document.querySelector('#colors option:checked').text;
+      const qty = Number(document.getElementById('quantity').value);
+      addToCart(productId, color, qty);
+    })
     console.log (product)
 }
 initialize();

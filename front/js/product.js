@@ -1,3 +1,7 @@
+/**
+ * Description: Appel GET API
+ * @returns Response API
+ */
 function getProduct(id){
     return fetch("http://localhost:3000/api/products/" + id)
     .then((res) => res.json())
@@ -47,16 +51,22 @@ let save = function () {
   console.log('Cliquer !')
   recupererInput()
 }
+/**
+ * description: enregistre les item dans le localestorage ( panier)
+ * @param productId 
+ * @param color
+ * @param qty
+ */
 
 function addToCart(productId, color, qty) {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-  const existing = cart.find(item => item.productId === productId && item.color === color); 
+ const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  
+ const existing = cart.find(item => item.productId === productId && item.color === color); 
 
   if (existing) {
     existing.qty += qty;
   } else {
-    cart.push({ productId: productId, color: color, qty: qty });
+    cart.unshift({ productId: productId, color: color, qty: qty });
   }
 
   localStorage.setItem('cart', JSON.stringify(cart)); 

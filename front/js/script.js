@@ -1,4 +1,3 @@
-
 /**
  * Description: Appel GET API
  * @returns Response API
@@ -10,7 +9,6 @@ function getProducts(){
         window.alert("Une erreur est survenu.");
     })
 }
-
 /**
  * description: Creer une seul carte produit
  * @param {*} product

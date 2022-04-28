@@ -71,28 +71,26 @@ function priceTotal() {
   document.querySelector("#totalQuantity").innerHTML = qty;
   document.querySelector("#totalPrice").innerHTML = product.price;
 }
-
+//priceTotal()
 /**
 * description: suprimer les produits dans le panier
 * @param product
 */
 function deleteItem(){
-    let btnSupprimer = document.querySelectorAll("deleteItem");
- console.log(btnSupprimer);
+    
+ 
 
  for (let l = 0; 1 < btnSupprimer.length; l++){
    btnSupprimer[1].addEventListener("click" , (event) =>{
      event.preventDefault();
      console.log(event);
 
-     productEnregistreDansLocalStorage =productEnregistreDansLocalStorage.filter( el => el.id_productSelectionner !== id_productSelectionner_suppression);
-     console.log(productEnregistreDansLocalStorage);
      localStorage.setItem('cart', JSON.stringify(cart)); 
 
  })
  }}
- deleteItem()
-
+ //deleteItem()
+ 
 /**
 * description: creation d un formulaire
 * @param product
@@ -198,8 +196,11 @@ async function initialize() {
  await displayCart(cart);
 }
 
-
 initialize();
+let btnSupprimer = document.querySelector(".deleteItem");
+
+ console.log(btnSupprimer);
+
     
 
 

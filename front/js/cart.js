@@ -64,35 +64,59 @@ async function displayCart(cart){
   // addEventlistener sur chaque document.querySelectorAll
 }
 /**
+* description: prix total panier
+* @param product
+*/
+function priceTotal() {
+  document.querySelector("#totalQuantity").innerHTML = qty;
+  document.querySelector("#totalPrice").innerHTML = product.price;
+}
+
+/**
 * description: suprimer les produits dans le panier
 * @param product
 */
-function deleteProduct() {
-  let btn_supprimer = document.querySelectorAll('#deleteItem');
+function deleteItem(){
+    let btnSupprimer = document.querySelectorAll("deleteItem");
+ console.log(btnSupprimer);
 
-  for (let i = 0; i < btn_supprimer.length; i++){
-      btn_supprimer[i].addEventListener("click" , (event) => {
-          event.preventDefault();
+ for (let l = 0; 1 < btnSupprimer.length; l++){
+   btnSupprimer[1].addEventListener("click" , (event) =>{
+     event.preventDefault();
+     console.log(event);
 
-          //Selection de l'element à supprimer en fonction de son id ET sa couleur
-          let idDelete = productIdLocalStorage[i].productId;
-          let colorDelete = productIdLocalStorage[i].color;
+     productEnregistreDansLocalStorage =productEnregistreDansLocalStorage.filter( el => el.id_productSelectionner !== id_productSelectionner_suppression);
+     console.log(productEnregistreDansLocalStorage);
+     localStorage.setItem('cart', JSON.stringify(cart)); 
 
-          productIdLocalStorage = productIdLocalStorage.filter( el => el.productId !== idDelete || el.color !== colorDelete );
-          
-          localStorage.setItem("product", JSON.stringify(productIdLocalStorage));
-
-        
-      })
-  }
-}
-deleteProduct();
+ })
+ }}
+ deleteItem()
 
 /**
 * description: creation d un formulaire
 * @param product
 */
 function getForm() {
+  let form2 = document.getElementById("order");
+  form2.addEventListener("click" , (event) => {
+    event.preventDefault(); 
+    let firstName = document.getElementById("firstName");
+    let lastName = document.getElementById("lastName");
+    let address = document.getElementById("address");
+    let city = document.getElementById("city");
+    let email = document.getElementById("email");
+    
+    console.log(firstName.value);
+    console.log(lastName.value);
+
+    // redirection page validation
+    
+    document.location.href="confirmation.html"; 
+      
+  });
+
+  console.log(form2,"test");
 
   // Ajout des Regex
   let form = document.querySelector(".cart__order__form");
@@ -103,30 +127,7 @@ function getForm() {
   let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
   
-  // modification du nom
-  form.firstName.addEventListener('change', function() {
-      validFirstName(this);
-  });
-
-  // modification du prénom
-  form.lastName.addEventListener('change', function() {
-      validLastName(this);
-  });
-
-  // modification de l adress
-  form.address.addEventListener('change', function() {
-      validAddress(this);
-  });
-
-  // modification de la ville
-  form.city.addEventListener('change', function() {
-      validCity(this);
-  });
-
-  // modification email
-  form.email.addEventListener('change', function() {
-      validEmail(this);
-  });
+ 
 
   //validation du prénom
   const validFirstName = function(inputFirstName) {
@@ -182,22 +183,13 @@ function getForm() {
           emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
       }
   };
+  
   console.log (getForm)
-  }
-getForm();
-
-
-  
-  
-          
-
-
-function localeStorageRemoveItem(){
-  //localStorage.removeItem("cart");
 }
 
+ getForm();
  
- /**
+/**
  * Description: Cette fonction initialise la page
  */
 async function initialize() {

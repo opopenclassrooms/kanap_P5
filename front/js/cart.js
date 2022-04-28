@@ -76,7 +76,7 @@ function priceTotal() {
 * description: suprimer les produits dans le panier
 * @param product
 */
-function deleteItem(){
+/**function deleteItem(){
     let btnSupprimer = document.querySelectorAll("deleteItem");
  console.log(btnSupprimer);
 
@@ -91,14 +91,60 @@ function deleteItem(){
 
  })
  }}
- deleteItem()
+ deleteItem()**/
+
+
+function getRandomArbitrary() {
+    return Math.ceil(Math.random() * (200 - 100) + 100);
+}
+
+function validationForm() {
+    // Recup tous les elements
+
+    let valid = true
+    let firstName = document.getElementById("firstName");
+    let lastName = document.getElementById("lastName");
+    let address = document.getElementById("address");
+    let city = document.getElementById("city");
+    let email = document.getElementById("email");
+
+    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+
+    // Veririfier tous les elements du formulaire
+
+    if(!emailRegExp.test(email.value)) {
+        valid = false
+        let emailErrorMsg = email.nextElementSibling;
+        emailErrorMsg.innerHTML = 'Veuillez entrer une adresse email valide.';
+    }
+
+    return valid
+}
 
 /**
 * description: creation d un formulaire
 * @param product
 */
 function getForm() {
-  let form2 = document.getElementById("order");
+
+    let form = document.getElementById("order");
+
+    form.addEventListener("click" , (event) => {
+        event.preventDefault();
+
+        //Validater les infos
+        // Message erreur
+        if(validationForm()) {
+            // Creer un numero de commande
+            const order = getRandomArbitrary()
+
+            // Redirigerer vers la page correspondante
+            // Avec un numero de commande
+            document.location.href="confirmation.html?order=" + order;
+        }
+    })
+
+  /*
   form2.addEventListener("click" , (event) => {
     event.preventDefault(); 
     let firstName = document.getElementById("firstName");
@@ -112,7 +158,7 @@ function getForm() {
 
     // redirection page validation
     
-    document.location.href="confirmation.html"; 
+    //document.location.href="confirmation.html";
       
   });
 
@@ -184,10 +230,25 @@ function getForm() {
       }
   };
   
-  console.log (getForm)
+  console.log (getForm)*/
 }
 
- getForm();
+getForm();
+
+/**
+ * Suprimer item dans localstorage
+ *
+ */
+function deleteItems(position) {
+    // Recuperer le tab items dans local storage
+    let tabItems = JSON.parse(localStorage.getItem('cart'));
+    // Supprimer cette ellement
+    tabItems.splice(position, 1)
+    // remetre dans le localstorage le nouveau tableau
+    localStorage.setItem('cart', JSON.stringify(tabItems));
+    // reload la page changement soit visible
+    document.location.reload()
+}
  
 /**
  * Description: Cette fonction initialise la page
@@ -196,10 +257,18 @@ async function initialize() {
   //const products = await getProducts();
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
  await displayCart(cart);
+
+    let btn = document.querySelectorAll('.deleteItem')
+    for (let l = 0; l < btn.length; l++){
+        //Ecouter evenenent
+        btn[l].addEventListener("click" , () => {
+            deleteItems(l)
+        })
+    }
 }
 
 
 initialize();
-    
+
 
 

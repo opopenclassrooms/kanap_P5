@@ -32,6 +32,7 @@ function createProductCard(product) {
     const productArticle = document.createElement('article');
     productArticle.append(productImg, productName, productDescription);
 
+    //boucle pour tous les produits du catalogue
     const a = document.createElement('a');
     a.href = './product.html?id=' + product._id;
     a.appendChild(productArticle);
@@ -51,8 +52,6 @@ function displayProducts(products){
         itemsSection.appendChild(card);
     }
 }
-
-
 /**
  * Description: Cette fonction initialise la page
  */

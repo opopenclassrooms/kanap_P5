@@ -47,8 +47,7 @@ function checkColors(product)
 /**
  * description: Enregistre dans le loccal storage les item selectioner
  */
-let save = function () {
-  console.log('Cliquer !')
+  let save = function () {
   recupererInput()
 }
 /**
@@ -68,8 +67,7 @@ function addToCart(productId, color, qty) {
   } else {
     cart.unshift({ productId: productId, color: color, qty: qty });
   }
-
-  localStorage.setItem('cart', JSON.stringify(cart)); 
+    localStorage.setItem('cart', JSON.stringify(cart)); 
 }
   
 
@@ -85,6 +83,5 @@ async function initialize(){
       const qty = Number(document.getElementById('quantity').value);
       addToCart(productId, color, qty);
     })
-    console.log (product)
 }
 initialize();

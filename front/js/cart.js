@@ -2,7 +2,7 @@
  * Description: Appel GET API
  * @returns Response API
  */
-function getProduct(id){
+ function getProduct(id){
   return fetch("http://localhost:3000/api/products/"+ id )
   .then((res) => res.json())
   .catch((error) => {
@@ -49,7 +49,7 @@ function createArticle(product, qty, color) {
 }
 
 /**
-* description: afficher les prosuits dans le panier
+* description: afficher les produits dans le panier
 * @param product
 */
 async function displayCart(cart){
@@ -60,8 +60,6 @@ async function displayCart(cart){
       const card = createArticle(product, item.qty, item.color);
       itemsSection.appendChild(card);
   }
-
-  // addEventlistener sur chaque document.querySelectorAll
 }
 /**
 * description: prix total panier
@@ -72,120 +70,111 @@ function priceTotal() {
   document.querySelector("#totalPrice").innerHTML = product.price;
 }
 //priceTotal()
-/**
-* description: suprimer les produits dans le panier
-* @param product
-*/
-function deleteItem(){
+
+
+
+
+function getRandomArbitrary() {
+    return Math.ceil(Math.random() * (200 - 100) + 100);
+}
+
+function validationForm() {
     
- 
+  // Recup tous les elements
 
- for (let l = 0; 1 < btnSupprimer.length; l++){
-   btnSupprimer[1].addEventListener("click" , (event) =>{
-     event.preventDefault();
-     console.log(event);
-
-     localStorage.setItem('cart', JSON.stringify(cart)); 
-
- })
- }}
- //deleteItem()
- 
-/**
-* description: creation d un formulaire
-* @param product
-*/
-function getForm() {
-  let form2 = document.getElementById("order");
-  form2.addEventListener("click" , (event) => {
-    event.preventDefault(); 
+    let valid = true
     let firstName = document.getElementById("firstName");
     let lastName = document.getElementById("lastName");
     let address = document.getElementById("address");
     let city = document.getElementById("city");
     let email = document.getElementById("email");
+     
+    //Création des expressions régulières
     
-    console.log(firstName.value);
-    console.log(lastName.value);
-
-    // redirection page validation
+    let firstNameRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
+    let lastNameRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
+    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+    let cityRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
+    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
     
-    document.location.href="confirmation.html"; 
-      
-  });
+    // Veririfier tous les elements du formulaire
+    
+    if(!firstNameRegExp.test(firstName.value)) {
+      valid = false
+      let firstNameErrorMsg = firstName.nextElementSibling;
+      firstNameErrorMsg.innerHTML = 'Veuillez entrer un nom valide.';
+  } 
 
-  console.log(form2,"test");
+    if(!lastNameRegExp.test(lastName.value)) {
+      valid = false
+      let lastNameErrorMsg = lastName.nextElementSibling;
+      lastNameErrorMsg.innerHTML = 'Veuillez entrer un prenom valide.';
+  } 
+    if(!addressRegExp.test(address.value)) {
+      valid = false
+      let addressErrorMsg = address.nextElementSibling;
+      addressErrorMsg.innerHTML = 'Veuillez entrer une adresse valide.';
+  }
+  if(!cityRegExp.test(city.value)) {
+    valid = false
+    let cityErrorMsg = city.nextElementSibling;
+    cityErrorMsg.innerHTML = 'Veuillez entrer une ville valide.';
+}
+    
+  if(!emailRegExp.test(email.value)) {
+      valid = false
+      let emailErrorMsg = email.nextElementSibling;
+      emailErrorMsg.innerHTML = 'Veuillez entrer une adresse email valide.';
+  }
 
-  // Ajout des Regex
-  let form = document.querySelector(".cart__order__form");
+  return valid
+}
+     
+  
 
-  //Création des expressions régulières
-  let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-  let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-  let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+
+/**
+* description: creation d un formulaire
+* @param product
+*/
+function getForm() {
+
+    let form = document.getElementById("order");
+
+    form.addEventListener("click" , (event) => {
+        event.preventDefault();
+
+        //Validater les infos
+        // Message erreur
+        if(validationForm()) {
+            // Creer un numero de commande
+            const order = getRandomArbitrary()
+
+            // Redirigerer vers la page correspondante
+            // Avec un numero de commande
+            document.location.href="confirmation.html?order=" + order;
+        }
+    })
 
   
- 
-
-  //validation du prénom
-  const validFirstName = function(inputFirstName) {
-      let firstNameErrorMsg = inputFirstName.nextElementSibling;
-
-      if (charRegExp.test(inputFirstName.value)) {
-          firstNameErrorMsg.innerHTML = '';
-      } else {
-          firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-      }
-  };
-
-  //validation du nom
-  const validLastName = function(inputLastName) {
-      let lastNameErrorMsg = inputLastName.nextElementSibling;
-
-      if (charRegExp.test(inputLastName.value)) {
-          lastNameErrorMsg.innerHTML = '';
-      } else {
-          lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-      }
-  };
-
-  //validation de l'adresse
-  const validAddress = function(inputAddress) {
-      let addressErrorMsg = inputAddress.nextElementSibling;
-
-      if (addressRegExp.test(inputAddress.value)) {
-          addressErrorMsg.innerHTML = '';
-      } else {
-          addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-      }
-  };
-
-  //validation de la ville
-  const validCity = function(inputCity) {
-      let cityErrorMsg = inputCity.nextElementSibling;
-
-      if (charRegExp.test(inputCity.value)) {
-          cityErrorMsg.innerHTML = '';
-      } else {
-          cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-      }
-  };
-
-  //validation de l'email
-  const validEmail = function(inputEmail) {
-      let emailErrorMsg = inputEmail.nextElementSibling;
-
-      if (emailRegExp.test(inputEmail.value)) {
-          emailErrorMsg.innerHTML = '';
-      } else {
-          emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
-      }
-  };
-  
-  console.log (getForm)
 }
 
- getForm();
+getForm();
+
+/**
+ * Suprimer item dans localstorage
+ *
+ */
+function deleteItems(position) {
+    // Recuperer le tab items dans local storage
+    let tabItems = JSON.parse(localStorage.getItem('cart'));
+    // Supprimer cette ellement
+    tabItems.splice(position, 1)
+    // remetre dans le localstorage le nouveau tableau
+    localStorage.setItem('cart', JSON.stringify(tabItems));
+    // reload la page changement soit visible
+    document.location.reload()
+}
  
 /**
  * Description: Cette fonction initialise la page
@@ -194,13 +183,15 @@ async function initialize() {
   //const products = await getProducts();
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
  await displayCart(cart);
+
+    let btn = document.querySelectorAll('.deleteItem')
+    for (let l = 0; l < btn.length; l++){
+        //Ecouter evenenent
+        btn[l].addEventListener("click" , () => {
+            deleteItems(l)
+        })
+    }
 }
 
+
 initialize();
-let btnSupprimer = document.querySelector(".deleteItem");
-
- console.log(btnSupprimer);
-
-    
-
-

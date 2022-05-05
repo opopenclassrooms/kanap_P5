@@ -175,23 +175,88 @@ function deleteItems(position) {
     // reload la page changement soit visible
     document.location.reload()
 }
+
+function handleQuantity(event, index) {
+    let tabItems = JSON.parse(localStorage.getItem('cart'));
+    tabItems[index].qty = event.target.value
+    localStorage.setItem('cart', JSON.stringify(tabItems));
+}
  
 /**
  * Description: Cette fonction initialise la page
  */
 async function initialize() {
-  //const products = await getProducts();
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
- await displayCart(cart);
+    //const products = await getProducts();
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    await displayCart(cart);
 
     let btn = document.querySelectorAll('.deleteItem')
-    for (let l = 0; l < btn.length; l++){
+    for (let l = 0; l < btn.length; l++) {
         //Ecouter evenenent
-        btn[l].addEventListener("click" , () => {
+        btn[l].addEventListener("click", () => {
             deleteItems(l)
+
         })
+    }
+    // itemQuantity
+    let btn_qty = document.querySelectorAll('.itemQuantity')
+    for (let l = 0; l < btn_qty.length; l++) {
+        //Ecouter evenenent
+        btn_qty[l].addEventListener("change", (event) => {
+            handleQuantity(event, l)
+            showPrice()
+        })
+    }
+
+}
+
+function getAllQuantity() {
+    let tabItems = JSON.parse(localStorage.getItem('cart'));
+    let total = 0;
+    for (let l = 0; l < tabItems.length; l++) {
+        total += parseInt(tabItems[l].qty, 10)
+    }
+    return total
+}
+
+async function getAllPrice() {
+    const DISPLAY_PRICE = document.getElementById('totalPrice')
+    let tabItems = JSON.parse(localStorage.getItem('cart'));
+    let totalPrice = [];
+    for (let l = 0; l < tabItems.length; l++) {
+        getProduct(tabItems[l].productId)
+            .then((product) => {
+                totalPrice.push(product.price * tabItems[l].qty)
+
+                let price = totalPrice.reduce((acc, currentValue) => {
+                    return acc + currentValue
+                }, 0)
+                DISPLAY_PRICE.innerHTML = price
+            })
     }
 }
 
+function showPrice() {
+    let totalQuantity = document.getElementById('totalQuantity')
+    totalQuantity.innerHTML = getAllQuantity()
+    getAllPrice()
+}
 
 initialize();
+
+
+showPrice()
+
+
+/**
+ * Description: Appel GET API
+ * @returns Response API
+ */
+function getProduct(id){
+    return fetch("http://localhost:3000/api/products/" + id)
+        .then((res) => res.json())
+        .catch((error) => {
+            window.alert("Une erreur");
+            // Erreur
+        })
+}

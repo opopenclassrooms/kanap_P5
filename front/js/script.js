@@ -39,7 +39,6 @@ function createProductCard(product) {
 
     return a;
 }
-
 /**
  * description: Affichage de toutes les cartes produits
  * @param {*} products

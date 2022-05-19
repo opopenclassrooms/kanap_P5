@@ -78,56 +78,46 @@ function getRandomArbitrary() {
     return Math.ceil(Math.random() * (200 - 100) + 100);
 }
 
-function validationForm() {
+function validateField(field, re, errorMessage) {
+  if(!re.test(field.value)) {
+    field.nextElementSibling.innerHTML = errorMessage;
+    return false;
+  } else {
+    field.nextElementSibling.innerHTML = "";
+    return true;
+  }
+}
+
+function validateForm() {
     
   // Recup tous les elements
 
-    let valid = true
     let firstName = document.getElementById("firstName");
     let lastName = document.getElementById("lastName");
     let address = document.getElementById("address");
     let city = document.getElementById("city");
     let email = document.getElementById("email");
-     
+
+    [firstName, lastName, address, city, email].forEach((el) => el.nextElementSibling.innerHTML = "");
+    
     //Création des expressions régulières
     
-    let firstNameRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
-    let lastNameRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
+    let firstNameRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,30}$");
+    let lastNameRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,30}$");
     let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
     let cityRegExp = new RegExp("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
     let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
     
     // Veririfier tous les elements du formulaire
-    
-    if(!firstNameRegExp.test(firstName.value)) {
-      valid = false
-      let firstNameErrorMsg = firstName.nextElementSibling;
-      firstNameErrorMsg.innerHTML = 'Veuillez entrer un nom valide.';
-  } 
 
-    if(!lastNameRegExp.test(lastName.value)) {
-      valid = false
-      let lastNameErrorMsg = lastName.nextElementSibling;
-      lastNameErrorMsg.innerHTML = 'Veuillez entrer un prenom valide.';
-  } 
-    if(!addressRegExp.test(address.value)) {
-      valid = false
-      let addressErrorMsg = address.nextElementSibling;
-      addressErrorMsg.innerHTML = 'Veuillez entrer une adresse valide.';
-  }
-  if(!cityRegExp.test(city.value)) {
-    valid = false
-    let cityErrorMsg = city.nextElementSibling;
-    cityErrorMsg.innerHTML = 'Veuillez entrer une ville valide.';
-}
-    
-  if(!emailRegExp.test(email.value)) {
-      valid = false
-      let emailErrorMsg = email.nextElementSibling;
-      emailErrorMsg.innerHTML = 'Veuillez entrer une adresse email valide.';
-  }
-
-  return valid
+    const fieldsValidation = [
+      validateField(firstName, firstNameRegExp, 'Veuillez entrer un prenom valide.'),
+      validateField(lastName, lastNameRegExp, 'Veuillez entrer un nom valide.'),
+      validateField(address, addressRegExp, 'Veuillez entrer une adresse valide.'),
+      validateField(city, cityRegExp, 'Veuillez entrer une ville valide.'),
+      validateField(email, emailRegExp, 'Veuillez entrer une adresse email valide.'),
+    ];
+    return fieldsValidation.every(v => v);
 }
      
   
@@ -137,29 +127,59 @@ function validationForm() {
 * description: creation d un formulaire
 * @param product
 */
-function getForm() {
+function initForm() {
+  const form = document.querySelector('form');
 
-    let form = document.getElementById("order");
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    
+    if(!validateForm()) {
+      return;
+    }
+    
+    const contact = {
+      firstName: document.querySelector('input#firstName').value,
+      lastName: document.querySelector('input#lastName').value,
+      address: document.querySelector('input#address').value,
+      city: document.querySelector('input#city').value,
+      email: document.querySelector('input#email').value,
+    };
 
-    form.addEventListener("click" , (event) => {
-        event.preventDefault();
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const productIds = cart.map(product => product.productId);
 
-        //Validater les infos
-        // Message erreur
-        if(validationForm()) {
-            // Creer un numero de commande
-            const order = getRandomArbitrary()
+    try {
+      const response = await fetch('http://localhost:3000/api/products/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contact: contact,
+          products: productIds,
+        }),
+      });
+      
+      const payload = await response.json();
 
-            // Redirigerer vers la page correspondante
-            // Avec un numero de commande
-            document.location.href="confirmation.html?order=" + order;
-        }
-    })
+      if (response.ok) {
+        document.location.href = './confirmation.html?order=' + payload.orderId;
+      } else {
+        throw new Error('Order not created');
+      }
+    } catch(e) {
+      // handle error in UI
+      console.log(e.message);
+    }
+    
+  };
+
+  form.onsubmit = onSubmit;
 
   
 }
 
-getForm();
+initForm();
 
 /**
  * Suprimer item dans localstorage
